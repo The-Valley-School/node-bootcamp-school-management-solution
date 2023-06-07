@@ -2,8 +2,8 @@
 // import swaggerJsDoc from "swagger-jsdoc";
 // import { swaggerOptions } from "../swagger-options";
 import express, { type NextFunction, type Response, type Request, type ErrorRequestHandler } from "express";
-// import { mongoConnect } from "../domain/repositories/mongo-repository";
-// import { userRouter } from "./user.routes";
+import { mongoConnect } from "../domain/repositories/mongo-repository";
+import { userRouter } from "./user.routes";
 // import { carRouter } from "./car.routes";
 // import { brandRouter } from "./brand.routes";
 
@@ -13,10 +13,10 @@ export const configureRoutes = (app: any): any => {
   // app.use("/api-docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
   // Middleware de conexión a Mongo
-  // app.use(async (req: Request, res: Response, next: NextFunction) => {
-  //   await mongoConnect();
-  //   next();
-  // });
+  app.use(async (req: Request, res: Response, next: NextFunction) => {
+    await mongoConnect();
+    next();
+  });
 
   // Rutas
   const router = express.Router();
@@ -30,7 +30,7 @@ export const configureRoutes = (app: any): any => {
   });
 
   // Usamos las rutas
-  // app.use("/user", userRouter);
+  app.use("/user", userRouter);
   // app.use("/car", carRouter);
   // app.use("/brand", brandRouter);
   app.use("/public", express.static("public"));
