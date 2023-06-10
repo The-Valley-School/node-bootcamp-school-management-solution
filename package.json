@@ -11,7 +11,7 @@
     "test:verbose": "cross-env DB_NAME=NODE-BOOTCAMP-TESTING jest",
     "test": "cross-env DB_NAME=NODE-BOOTCAMP-TESTING jest --silent",
     "prepare": "husky install",
-    "precommit": "npm run lint && npm run build && npm run test"
+    "precommit": "npm run lint && npm run test && npm run build"
   },
   "keywords": [
     "node",
