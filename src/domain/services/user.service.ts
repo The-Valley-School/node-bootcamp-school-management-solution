@@ -100,9 +100,9 @@ const updateUser = async (req: Request, res: Response, next: NextFunction): Prom
     const userToUpdate = await userOdm.getUserById(id);
     if (userToUpdate) {
       Object.assign(userToUpdate, req.body);
-      await userToUpdate.save();
+      const userUpdated = await userToUpdate.save();
       // Quitamos pass de la respuesta
-      const userToSend: any = userToUpdate.toObject();
+      const userToSend: any = userUpdated.toObject();
       delete userToSend.password;
       res.json(userToSend);
     } else {

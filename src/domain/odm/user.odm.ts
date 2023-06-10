@@ -1,7 +1,7 @@
-import { User, IUser } from "../entities/user-entity";
+import { User, IUser } from "../entities/user.entity";
 import { Document } from "mongoose";
 
-const getAllUsers = async (page: number, limit: number): Promise<any> => {
+const getAllUsers = async (page: number, limit: number): Promise<IUser[]> => {
   return await User.find()
     .limit(limit)
     .skip((page - 1) * limit);
@@ -12,7 +12,7 @@ const getUserCount = async (): Promise<number> => {
 };
 
 const getUserById = async (id: string): Promise<IUser | null> => {
-  return await User.findById(id).populate(["parents", "children"]);
+  return await User.findById(id).populate(["parents", "children", "classroom"]);
 };
 
 const getUserByEmailWithPassword = async (email: string): Promise<IUser | null> => {
@@ -20,15 +20,17 @@ const getUserByEmailWithPassword = async (email: string): Promise<IUser | null> 
   return user;
 };
 
-// const getUserByName = async (name: string): Promise<Document<IUser>[]> => {
-//   return await User.find({ firstName: new RegExp("^" + name.toLowerCase(), "i") });
-// };
+const getStudentsOfClassroomId = async (classroomId: string): Promise<IUser[]> => {
+  return await User.find({ classroom: classroomId });
+};
 
 const createUser = async (userData: any): Promise<Document<IUser>> => {
   const user = new User(userData);
   const document: Document<IUser> = (await user.save()) as any;
+  const userCopy = document.toObject();
+  delete userCopy.password;
 
-  return document;
+  return userCopy;
 };
 
 const deleteUser = async (id: string): Promise<IUser | null> => {
@@ -44,7 +46,7 @@ export const userOdm = {
   getUserCount,
   getUserById,
   getUserByEmailWithPassword,
-  // getUserByName,
+  getStudentsOfClassroomId,
   createUser,
   deleteUser,
   updateUser,

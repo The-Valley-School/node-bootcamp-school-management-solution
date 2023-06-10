@@ -4,8 +4,7 @@
 import express, { type NextFunction, type Response, type Request, type ErrorRequestHandler } from "express";
 import { mongoConnect } from "../domain/repositories/mongo-repository";
 import { userRouter } from "./user.routes";
-// import { carRouter } from "./car.routes";
-// import { brandRouter } from "./brand.routes";
+import { classroomRouter } from "./classroom.routes";
 
 export const configureRoutes = (app: any): any => {
   // Swagger
@@ -31,8 +30,7 @@ export const configureRoutes = (app: any): any => {
 
   // Usamos las rutas
   app.use("/user", userRouter);
-  // app.use("/car", carRouter);
-  // app.use("/brand", brandRouter);
+  app.use("/classroom", classroomRouter);
   app.use("/public", express.static("public"));
   app.use("/", router);
 

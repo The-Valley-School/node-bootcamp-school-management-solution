@@ -1,6 +1,6 @@
 import { mongoConnect } from "../src/domain/repositories/mongo-repository";
 import { appInstance } from "../src/index";
-import { IUserCreate, ROL, User } from "../src/domain/entities/user-entity";
+import { IUserCreate, ROL, User } from "../src/domain/entities/user.entity";
 import { app } from "../src/server";
 import mongoose from "mongoose";
 import request from "supertest";

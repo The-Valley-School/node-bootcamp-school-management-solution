@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "./token";
-import { IUser } from "../domain/entities/user-entity";
+import { IUser } from "../domain/entities/user.entity";
 import { userOdm } from "../domain/odm/user.odm";
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<null> => {
