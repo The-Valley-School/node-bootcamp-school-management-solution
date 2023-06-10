@@ -1,7 +1,7 @@
 import { Classroom, IClassroom } from "../entities/classroom.entity";
 import { Document } from "mongoose";
 
-const getAllClassrooms = async (page: number, limit: number): Promise<any> => {
+const getAllClassrooms = async (page: number, limit: number): Promise<IClassroom[]> => {
   return await Classroom.find()
     .limit(limit)
     .skip((page - 1) * limit);

@@ -16,11 +16,8 @@ export interface IUserCreate {
   firstName: string;
   lastName: string;
   classroom?: IClassroom;
-  parents?: IUser[];
   children?: IUser[];
   rol: ROL;
-  // TODO:
-  // course: ICourse;
 }
 
 export type IUser = IUserCreate & Document;
@@ -63,16 +60,6 @@ const userSchema = new Schema<IUserCreate>(
       type: Schema.Types.ObjectId,
       ref: Classroom,
       required: false,
-    },
-    parents: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-      ],
-      required: true,
     },
     children: {
       type: [

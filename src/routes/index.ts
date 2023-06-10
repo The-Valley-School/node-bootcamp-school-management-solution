@@ -5,6 +5,7 @@ import express, { type NextFunction, type Response, type Request, type ErrorRequ
 import { mongoConnect } from "../domain/repositories/mongo-repository";
 import { userRouter } from "./user.routes";
 import { classroomRouter } from "./classroom.routes";
+import { subjectRouter } from "./subject.routes";
 
 export const configureRoutes = (app: any): any => {
   // Swagger
@@ -31,6 +32,7 @@ export const configureRoutes = (app: any): any => {
   // Usamos las rutas
   app.use("/user", userRouter);
   app.use("/classroom", classroomRouter);
+  app.use("/subject", subjectRouter);
   app.use("/public", express.static("public"));
   app.use("/", router);
 

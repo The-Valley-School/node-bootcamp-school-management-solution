@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { classOdm } from "../odm/classroom.odm";
-import { userOdm } from "../odm/user.odm";
 import { subjectOdm } from "../odm/subject.odm";
 
-const getClassrooms = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getSubjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Only for admins and teachers
     if (req.user.rol !== "ADMIN" && req.user.rol !== "TEACHER") {
@@ -15,16 +13,16 @@ const getClassrooms = async (req: Request, res: Response, next: NextFunction): P
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-    const classs = await classOdm.getAllClassrooms(page, limit);
+    const subjects = await subjectOdm.getAllSubjects(page, limit);
 
     // Num total de elementos
-    const totalElements = await classOdm.getClassroomCount();
+    const totalElements = await subjectOdm.getSubjectCount();
 
     const response = {
       totalItems: totalElements,
       totalPages: Math.ceil(totalElements / limit),
       currentPage: page,
-      data: classs,
+      data: subjects,
     };
 
     res.json(response);
@@ -33,26 +31,20 @@ const getClassrooms = async (req: Request, res: Response, next: NextFunction): P
   }
 };
 
-const getClassroomById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getSubjectById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const classroomIdToShow = req.params.id;
+    const subjectIdToShow = req.params.id;
 
-    // Only for admins, teachers and the current class
+    // Only for admins, teachers and the current subject
     if (req.user.rol !== "ADMIN" && req.user.rol !== "TEACHER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const classroomInfo = await classOdm.getClassroomById(classroomIdToShow);
+    const subjectInfo = await subjectOdm.getSubjectById(subjectIdToShow);
 
-    if (classroomInfo) {
-      const students = await userOdm.getStudentsOfClassroomId(classroomInfo.id);
-      const subjects = await subjectOdm.getSubjectsOfClassroomId(classroomInfo.id);
-      const classroomInfoToSend = classroomInfo.toObject();
-      classroomInfoToSend.students = students;
-      classroomInfoToSend.subjects = subjects;
-
-      res.json(classroomInfoToSend);
+    if (subjectInfo) {
+      res.json(subjectInfo);
     } else {
       res.status(404).json({});
     }
@@ -61,7 +53,7 @@ const getClassroomById = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-const createClassroom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const createSubject = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Solo admins pueden crear usuarios
     if (req.user.rol !== "ADMIN") {
@@ -69,14 +61,14 @@ const createClassroom = async (req: Request, res: Response, next: NextFunction):
       return;
     }
 
-    const createdClassroom = await classOdm.createClassroom(req.body);
-    res.status(201).json(createdClassroom);
+    const createdSubject = await subjectOdm.createSubject(req.body);
+    res.status(201).json(createdSubject);
   } catch (error) {
     next(error);
   }
 };
 
-const deleteClassroom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const deleteSubject = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
@@ -84,9 +76,9 @@ const deleteClassroom = async (req: Request, res: Response, next: NextFunction):
     }
 
     const id = req.params.id;
-    const classDeleted = await classOdm.deleteClassroom(id);
-    if (classDeleted) {
-      res.json(classDeleted);
+    const subjectDeleted = await subjectOdm.deleteSubject(id);
+    if (subjectDeleted) {
+      res.json(subjectDeleted);
     } else {
       res.status(404).json({});
     }
@@ -95,7 +87,7 @@ const deleteClassroom = async (req: Request, res: Response, next: NextFunction):
   }
 };
 
-const updateClassroom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const updateSubject = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
@@ -103,11 +95,11 @@ const updateClassroom = async (req: Request, res: Response, next: NextFunction):
     }
 
     const id = req.params.id;
-    const classToUpdate = await classOdm.getClassroomById(id);
-    if (classToUpdate) {
-      Object.assign(classToUpdate, req.body);
-      const classUpdated = await classToUpdate.save();
-      res.json(classUpdated);
+    const subjectToUpdate = await subjectOdm.getSubjectById(id);
+    if (subjectToUpdate) {
+      Object.assign(subjectToUpdate, req.body);
+      const subjectUpdated = await subjectToUpdate.save();
+      res.json(subjectUpdated);
     } else {
       res.status(404).json({});
     }
@@ -116,10 +108,10 @@ const updateClassroom = async (req: Request, res: Response, next: NextFunction):
   }
 };
 
-export const classService = {
-  getClassrooms,
-  getClassroomById,
-  createClassroom,
-  deleteClassroom,
-  updateClassroom,
+export const subjectService = {
+  getSubjects,
+  getSubjectById,
+  createSubject,
+  deleteSubject,
+  updateSubject,
 };

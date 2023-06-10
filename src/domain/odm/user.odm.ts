@@ -12,7 +12,8 @@ const getUserCount = async (): Promise<number> => {
 };
 
 const getUserById = async (id: string): Promise<IUser | null> => {
-  return await User.findById(id).populate(["parents", "children", "classroom"]);
+  // TODO: Add parents info
+  return await User.findById(id).populate(["children", "classroom"]);
 };
 
 const getUserByEmailWithPassword = async (email: string): Promise<IUser | null> => {
